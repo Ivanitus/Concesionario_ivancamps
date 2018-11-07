@@ -5,7 +5,8 @@ public class concesionario {
 		String passwd_admin="admin123";
 		String usuario_introducido, passwd_introducido;
 		String opcion;
-		boolean seguir=true;
+		boolean seguir=true, admin_correcto=false;
+		int contador=0;
 		final double IVA=0.21;
 		Scanner sc=new Scanner(System.in);
 		String coches[][]=new String[20][4];
@@ -51,8 +52,26 @@ public class concesionario {
 		do {
 			menu_principal();
 			opcion=sc.next();
-			/*switch (opcion) {
-			}*/
+			switch (opcion) {
+			case "1": 
+					System.out.print("Introduce el nombre de usuario: ");
+					usuario_introducido=sc.next();
+					System.out.print("Introduce la contraseña: ");
+					passwd_introducido=sc.next();
+				if (datoscorrectos(usuario_introducido, passwd_introducido, admin, passwd_admin, admin_correcto)) {
+					System.out.println("Correcto");
+				}
+				else {
+					System.out.println("Falso");
+				}
+				break;
+			case "3":
+				seguir=false;
+				break;
+			default:
+				System.out.println("Opcion erronea");
+				seguir=true;
+			}
 		}while(seguir);
 	}
 	public static void menu_principal() {
@@ -60,5 +79,18 @@ public class concesionario {
 		System.out.println("2.- Entrar como usuario");
 		System.out.println("3.- Salir");
 		System.out.print("Introduce una opcion: ");
+	}
+	/*public static void administrador(String admin, String passwd_admin, String usuario_introducido, String passwd_introducido) {
+		System.out.print("Introduce el nombre de usuario: ");
+		
+	}*/
+	public static boolean datoscorrectos(String usuario_introducido, String passwd_introducido, String admin, String passwd_admin, boolean admin_correcto) {
+		if(usuario_introducido.equals(admin) && passwd_introducido.equals(passwd_admin)) {
+			admin_correcto=true;
+		}
+		else {
+			admin_correcto=false;
+		}
+		return admin_correcto;
 	}
 }
