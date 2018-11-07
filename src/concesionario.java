@@ -1,6 +1,13 @@
 import java.util.Scanner;
 public class concesionario {
 	public static void main (String [] args) {
+		String admin="admin";
+		String passwd_admin="admin123";
+		String usuario_introducido, passwd_introducido;
+		String opcion;
+		boolean seguir=true;
+		final double IVA=0.21;
+		Scanner sc=new Scanner(System.in);
 		String coches[][]=new String[20][4];
 		coches[0][0]="MARCA";
 		coches[0][1]="MODELO";
@@ -40,6 +47,18 @@ public class concesionario {
 				}
 			}
 			}
-		}*/	
+		}*/
+		do {
+			menu_principal();
+			opcion=sc.next();
+			/*switch (opcion) {
+			}*/
+		}while(seguir);
+	}
+	public static void menu_principal() {
+		System.out.println("1.- Entrar como administrador");
+		System.out.println("2.- Entrar como usuario");
+		System.out.println("3.- Salir");
+		System.out.print("Introduce una opcion: ");
 	}
 }
