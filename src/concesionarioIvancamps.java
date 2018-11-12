@@ -5,7 +5,7 @@ import java.util.Scanner;
  */
 
 /**
- * @author programacion
+ * @author Ivan Camps Sanchez
  *
  */
 public class concesionarioIvancamps {
@@ -19,7 +19,7 @@ public class concesionarioIvancamps {
 		String passwd_admin="admin123";
 		String usuario_introducido, passwd_introducido;
 		String opcion;
-		boolean seguir=true, admin_correcto=false;
+		boolean seguir=true, admin_correcto=false, salir_admin=false;
 		int contador=0;
 		final double IVA=0.21;
 		Scanner sc=new Scanner(System.in);
@@ -53,16 +53,6 @@ public class concesionarioIvancamps {
 		coches[5][1]="Roadster";
 		coches[5][2]="212000";
 		coches[5][3]="-";
-		/*for(int i=1; i < coches.length; i++) {
-			if (coches[i]!=null) {
-				System.out.println("");
-			for(int j=0; j<coches[i].length; j++) {
-				if (coches[i][j]!=null) {
-				System.out.print(coches[i][j]+" ");
-				}
-			}
-			}
-		}*/
 		do {
 			menu_principal();
 			opcion=sc.next();
@@ -73,10 +63,35 @@ public class concesionarioIvancamps {
 					System.out.print("Introduce la contraseña: ");
 					passwd_introducido=sc.next();
 				if (datoscorrectos(usuario_introducido, passwd_introducido, admin, passwd_admin, admin_correcto)) {
-					System.out.println("Correcto");
+					//System.out.println("Correcto");
+					do {
+					menu_admin();
+					opcion=sc.next();
+						switch(opcion) {
+						case "1": System.out.println(opcion);
+						salir_admin=true;
+								break;
+						case "2": System.out.println(opcion);
+						salir_admin=true;
+								break;
+						case "3": System.out.println(opcion);
+						salir_admin=true;
+								break;
+						case "4": System.out.println(opcion);
+						salir_admin=true;
+							break;
+						case "5": System.out.println(opcion);
+							salir_admin=true;
+							break;
+						default:
+							System.out.println("Opción errónea");
+							salir_admin=false;
+						}
+					}while(!salir_admin);
 				}
 				else {
-					System.out.println("Falso");
+					System.out.println("Nombre de usuario o contraseña incorrectos");
+					seguir=true;
 				}
 				break;
 			case "3":
@@ -94,10 +109,14 @@ public class concesionarioIvancamps {
 		System.out.println("3.- Salir");
 		System.out.print("Introduce una opcion: ");
 	}
-	/*public static void administrador(String admin, String passwd_admin, String usuario_introducido, String passwd_introducido) {
-		System.out.print("Introduce el nombre de usuario: ");
-		
-	}*/
+	public static void menu_admin() {
+		System.out.println("1.- Agregar coches");
+		System.out.println("2.- Modificar coches");
+		System.out.println("3.- Eliminar coches");
+		System.out.println("4.- Mostrar coches");
+		System.out.println("5.- Salir");
+		System.out.print("Selecciona una opcion: ");
+	}
 	public static boolean datoscorrectos(String usuario_introducido, String passwd_introducido, String admin, String passwd_admin, boolean admin_correcto) {
 		if(usuario_introducido.equals(admin) && passwd_introducido.equals(passwd_admin)) {
 			admin_correcto=true;
