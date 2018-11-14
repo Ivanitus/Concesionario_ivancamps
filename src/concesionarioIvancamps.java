@@ -20,9 +20,9 @@ public class concesionarioIvancamps {
 		String usuario_introducido, passwd_introducido;
 		String opcion;
 		String marca;
-		String modelo;
-		String precio_venta;
-		String precio_compra;
+		String modelo=null;
+		String precio_venta=null;
+		String precio_compra=null;
 		boolean seguir=true, admin_correcto=false, seguir_admin=true;
 		int contador=0;
 		final int filas_coches=20;
@@ -46,15 +46,16 @@ public class concesionarioIvancamps {
 					opcion=sc.next();
 						switch(opcion) {
 						case "1": 
-							System.out.println("Introduzca la marca del coche: ");
+							System.out.print("Introduzca la marca del coche: ");
 							marca=sc.next();
-							System.out.println("Introduzca el modelo: ");
+							System.out.print("Introduzca el modelo: ");
 							modelo=sc.next();
-							System.out.println("Introduzca el precio de venta del coche: ");
+							System.out.print("Introduzca el precio de venta del coche: ");
 							precio_venta=sc.next();
-							System.out.println("Introduzca el precio por el que comprarás el coche al cliente: ");
+							System.out.print("Introduzca el precio por el que comprarás el coche al cliente: ");
 							precio_compra=sc.next();
-							//agregar_coches(coches[][]);
+							agregar_coches(coches, marca, modelo, precio_venta, precio_compra);
+							
 						seguir_admin=true;
 								break;
 						case "2": System.out.println(opcion);
@@ -148,24 +149,28 @@ public class concesionarioIvancamps {
 		}
 		return admin_correcto;	
 	}
-	/**public static void agregar_coches(String coches[][]) {
-		for (int i=0; i<coches.length; i++){
-			for (int j=0; j<coches[i].length; j++) {
-				if (coches[i][j]!=null) {
-					
-				}
+	public static void agregar_coches(String coches[][], String marca, String modelo, String precio_venta, String precio_compra) {
+		
+		for(int i=1; i<coches.length; i++) {
+			if(coches[i][0]==null) {
+				coches[i][0]=marca;
+				//System.out.println(coches[i][j]);
+				//System.out.print(i + j);
+				coches[i][1]=modelo;
+				coches[i][2]=precio_venta;
+				coches[i][3]=precio_compra;
+				i=coches.length;
 			}
 		}
 	}
-	**/
 	public static void mostrar_coches(String coches[][]) {
 		for (int i=0; i<coches.length; i++){
+			if (coches[i][0]!=null) {
 				for (int j=0; j<coches[i].length; j++) {
-					if (coches[i][j]!=null) {
-						System.out.print(coches[i][j] + " ");
-					}
+					System.out.print(coches[i][j] + " | ");
 				}
 			System.out.println("");
+			}
 		}
 	}
 
