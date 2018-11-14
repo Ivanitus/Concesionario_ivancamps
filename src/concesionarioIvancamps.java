@@ -46,19 +46,19 @@ public class concesionarioIvancamps {
 					opcion=sc.next();
 						switch(opcion) {
 						case "1": 
-							System.out.print("Introduzca la marca del coche: ");
-							marca=sc.next();
-							System.out.print("Introduzca el modelo: ");
-							modelo=sc.next();
-							System.out.print("Introduzca el precio de venta del coche: ");
-							precio_venta=sc.next();
-							System.out.print("Introduzca el precio por el que comprarás el coche al cliente: ");
-							precio_compra=sc.next();
-							agregar_coches(coches, marca, modelo, precio_venta, precio_compra);
 							
+								System.out.print("Introduzca la marca del coche: ");
+								marca=sc.next();
+								System.out.print("Introduzca el modelo: ");
+								modelo=sc.next();
+								System.out.print("Introduzca el precio de venta del coche: ");
+								precio_venta=sc.next();
+								System.out.print("Introduzca el precio por el que comprarás el coche al cliente: ");
+								precio_compra=sc.next();
+								agregar_coches(coches, marca, modelo, precio_venta, precio_compra);
 						seguir_admin=true;
 								break;
-						case "2": System.out.println(opcion);
+						case "2": 
 						seguir_admin=true;
 								break;
 						case "3": System.out.println(opcion);
