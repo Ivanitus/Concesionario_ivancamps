@@ -15,15 +15,83 @@ public class concesionarioIvancamps {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String admin="admin";
-		String passwd_admin="admin123";
+		final String admin="admin";
+	 	final String passwd_admin="admin123";
 		String usuario_introducido, passwd_introducido;
 		String opcion;
-		boolean seguir=true, admin_correcto=false, salir_admin=false;
+		String marca;
+		String modelo;
+		String precio_venta;
+		String precio_compra;
+		boolean seguir=true, admin_correcto=false, seguir_admin=true;
 		int contador=0;
+		final int filas_coches=20;
+		final int columnas_coches=4;
 		final double IVA=0.21;
 		Scanner sc=new Scanner(System.in);
-		String coches[][]=new String[20][4];
+		String coches[][]=new String[filas_coches][columnas_coches];
+		iniciar_coches(coches);
+		do {
+			menu_principal();
+			opcion=sc.next();
+			switch (opcion) {
+			case "1": 
+					System.out.print("Introduce el nombre de usuario: ");
+					usuario_introducido=sc.next();
+					System.out.print("Introduce la contraseña: ");
+					passwd_introducido=sc.next();
+				if (datoscorrectos(usuario_introducido, passwd_introducido, admin, passwd_admin, admin_correcto)) {
+					do {
+					menu_admin();
+					opcion=sc.next();
+						switch(opcion) {
+						case "1": 
+							System.out.println("Introduzca la marca del coche: ");
+							marca=sc.next();
+							System.out.println("Introduzca el modelo: ");
+							modelo=sc.next();
+							System.out.println("Introduzca el precio de venta del coche: ");
+							precio_venta=sc.next();
+							System.out.println("Introduzca el precio por el que comprarás el coche al cliente: ");
+							precio_compra=sc.next();
+							//agregar_coches(coches[][]);
+						seguir_admin=true;
+								break;
+						case "2": System.out.println(opcion);
+						seguir_admin=true;
+								break;
+						case "3": System.out.println(opcion);
+						seguir_admin=true;
+								break;
+						case "4": 
+							mostrar_coches(coches);
+						seguir_admin=true;
+							break;
+						case "5": System.out.println(opcion);
+								seguir_admin=false;
+							break;
+						default:
+							System.out.println("Opción errónea");
+							seguir_admin=true;
+						}
+					}while(seguir_admin);
+				}
+				else {
+					System.out.println("Nombre de usuario o contraseña incorrectos");
+					seguir=true;
+				}
+				break;
+			case "3":
+				seguir=false;
+				break;
+			default:
+				System.out.println("Opcion erronea");
+				seguir=true;
+			}
+		}while(seguir);
+	}
+	public static void iniciar_coches(String coches[][]) {
+		//cabecera
 		coches[0][0]="MARCA";
 		coches[0][1]="MODELO";
 		coches[0][2]="PRECIO VENTA";
@@ -53,60 +121,14 @@ public class concesionarioIvancamps {
 		coches[5][1]="Roadster";
 		coches[5][2]="212000";
 		coches[5][3]="-";
-		do {
-			menu_principal();
-			opcion=sc.next();
-			switch (opcion) {
-			case "1": 
-					System.out.print("Introduce el nombre de usuario: ");
-					usuario_introducido=sc.next();
-					System.out.print("Introduce la contraseña: ");
-					passwd_introducido=sc.next();
-				if (datoscorrectos(usuario_introducido, passwd_introducido, admin, passwd_admin, admin_correcto)) {
-					//System.out.println("Correcto");
-					do {
-					menu_admin();
-					opcion=sc.next();
-						switch(opcion) {
-						case "1": System.out.println(opcion);
-						salir_admin=true;
-								break;
-						case "2": System.out.println(opcion);
-						salir_admin=true;
-								break;
-						case "3": System.out.println(opcion);
-						salir_admin=true;
-								break;
-						case "4": System.out.println(opcion);
-						salir_admin=true;
-							break;
-						case "5": System.out.println(opcion);
-							salir_admin=true;
-							break;
-						default:
-							System.out.println("Opción errónea");
-							salir_admin=false;
-						}
-					}while(!salir_admin);
-				}
-				else {
-					System.out.println("Nombre de usuario o contraseña incorrectos");
-					seguir=true;
-				}
-				break;
-			case "3":
-				seguir=false;
-				break;
-			default:
-				System.out.println("Opcion erronea");
-				seguir=true;
-			}
-		}while(seguir);
 	}
 	public static void menu_principal() {
-		System.out.println("1.- Entrar como administrador");
-		System.out.println("2.- Entrar como usuario");
-		System.out.println("3.- Salir");
+		System.out.println("Bienvenido al concesionario de supercoches Camps' Supercars");
+		System.out.println("|-------------------------------|");
+		System.out.println("| 1.- Entrar como administrador |");
+		System.out.println("| 2.- Entrar como usuario       |");
+		System.out.println("| 3.- Salir                     |");
+		System.out.println("|-------------------------------|");
 		System.out.print("Introduce una opcion: ");
 	}
 	public static void menu_admin() {
@@ -124,8 +146,27 @@ public class concesionarioIvancamps {
 		else {
 			admin_correcto=false;
 		}
-		return admin_correcto;
-
+		return admin_correcto;	
+	}
+	/**public static void agregar_coches(String coches[][]) {
+		for (int i=0; i<coches.length; i++){
+			for (int j=0; j<coches[i].length; j++) {
+				if (coches[i][j]!=null) {
+					
+				}
+			}
+		}
+	}
+	**/
+	public static void mostrar_coches(String coches[][]) {
+		for (int i=0; i<coches.length; i++){
+				for (int j=0; j<coches[i].length; j++) {
+					if (coches[i][j]!=null) {
+						System.out.print(coches[i][j] + " ");
+					}
+				}
+			System.out.println("");
+		}
 	}
 
 }
