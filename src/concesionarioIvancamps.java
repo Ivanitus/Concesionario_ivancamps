@@ -20,7 +20,7 @@ public class concesionarioIvancamps {
 		String usuario_introducido, passwd_introducido;
 		String opcion;
 		int idcoche=1;
-		int idmodificar;
+		int idmodificar=0;
 		String cadena_idcoche=null;
 		String marca;
 		String modelo;
@@ -30,9 +30,11 @@ public class concesionarioIvancamps {
 		int contador=0;
 		final int filas_coches=20;
 		final int columnas_coches=5;
+		//final int filas_usuarios
 		final double IVA=0.21;
 		Scanner sc=new Scanner(System.in);
 		String coches[][]=new String[filas_coches][columnas_coches];
+		//String usuarios[][]=new String[][];
 		idcoche=iniciar_coches(coches, idcoche, cadena_idcoche);
 		do {
 			menu_principal();
@@ -57,14 +59,16 @@ public class concesionarioIvancamps {
 							precio_venta=sc.next();
 							System.out.print("Introduzca el precio por el que comprarás el coche al cliente: ");
 							precio_compra=sc.next();
-							idcoche=agregar_coches(coches, idcoche, cadena_idcoche, marca, modelo, precio_venta, precio_compra);
+							idcoche=agregar_modificar_coches(coches, idcoche, cadena_idcoche, marca, modelo, precio_venta, precio_compra, idmodificar);
 							seguir_admin=true;
 							break;
 						case "2": 
 							System.out.print("Introduce el ID del coche que quieres modificar: ");
 							idmodificar=sc.nextInt();
-							idmodificar=posicion(coches, idmodificar, cadena_idcoche);
+							idmodificar=posicioncoches(coches, idmodificar, cadena_idcoche);
 							if (idmodificar!=-1){
+								mostrar_coches(coches, idmodificar);
+								cadena_idcoche=coches[idmodificar][0];
 								System.out.print("Introduce la marca del coche: ");
 								marca=sc.next();
 								System.out.print("Introduzca el modelo: ");
@@ -73,15 +77,31 @@ public class concesionarioIvancamps {
 								precio_venta=sc.next();
 								System.out.print("Introduzca el precio por el que comprarás el coche al cliente: ");
 								precio_compra=sc.next();
+								idcoche=agregar_modificar_coches(coches, idcoche, cadena_idcoche, marca, modelo, precio_venta, precio_compra, idmodificar);
+								mostrar_coches(coches, idmodificar);
+								idmodificar=0;
 								
 							}
 							seguir_admin=true;
 							break;
-						case "3": System.out.println(opcion);
+						case "3": 
+							System.out.print("Introduce el ID del coche que quieres eliminar: ");
+							idmodificar=sc.nextInt();
+							idmodificar=posicioncoches(coches, idmodificar, cadena_idcoche);
+							if (idmodificar!=1) {
+								mostrar_coches(coches, idmodificar);
+								cadena_idcoche=null;
+								marca=null;
+								modelo=null;
+								precio_venta=null;
+								precio_compra=null;
+								idcoche=agregar_modificar_coches(coches, idcoche, cadena_idcoche, marca, modelo, precio_venta, precio_compra, idmodificar);
+								idmodificar=0;
+							}
 							seguir_admin=true;
 							break;
 						case "4": 
-							mostrar_coches(coches);
+							mostrar_coches(coches, idmodificar);
 							seguir_admin=true;
 							break;
 						case "5": System.out.println(opcion);
@@ -97,6 +117,8 @@ public class concesionarioIvancamps {
 					System.out.println("Nombre de usuario o contraseña incorrectos");
 					seguir=true;
 				}
+				break;
+			case "2":
 				break;
 			case "3":
 				seguir=false;
@@ -187,33 +209,57 @@ public class concesionarioIvancamps {
 		System.out.println("5.- Cerrar sesion");
 		System.out.print("Selecciona una opcion: ");
 	}
-	public static int agregar_coches(String coches[][], int idcoche, String cadena_idcoche, String marca, String modelo, String precio_venta, String precio_compra) {
-		for(int i=1; i<coches.length; i++) {
-			if(coches[i][0]==null) {
-				cadena_idcoche=Integer.toString(idcoche);
-				coches[i][0]=cadena_idcoche;
-				idcoche=Integer.parseInt(cadena_idcoche);
-				idcoche++;
-				coches[i][1]=marca;
-				coches[i][2]=modelo;
-				coches[i][3]=precio_venta;
-				coches[i][4]=precio_compra;
-				i=coches.length;
+	public static int agregar_modificar_coches(String coches[][], int idcoche, String cadena_idcoche, String marca, String modelo, String precio_venta, String precio_compra, int idmodificar) {
+		if (idmodificar!=0){	
+			coches[idmodificar][0]=cadena_idcoche;
+			coches[idmodificar][1]=marca;
+			coches[idmodificar][2]=modelo;
+			coches[idmodificar][3]=precio_venta;
+			coches[idmodificar][4]=precio_compra;
+			System.out.println("Se han realizado los cambios correctamente");
+		}
+		else {
+			for(int i=1; i<coches.length; i++) {
+				if(coches[i][0]==null) {
+					cadena_idcoche=Integer.toString(idcoche);
+					coches[i][0]=cadena_idcoche;
+					idcoche=Integer.parseInt(cadena_idcoche);
+					idcoche++;
+					coches[i][1]=marca;
+					coches[i][2]=modelo;
+					coches[i][3]=precio_venta;
+					coches[i][4]=precio_compra;
+					i=coches.length;
+				}
 			}
 		}
 		return idcoche;
 	}
-	public static void mostrar_coches(String coches[][]) {
-		for (int i=0; i<coches.length; i++){
-			if (coches[i][0]!=null) {
-				for (int j=0; j<coches[i].length; j++) {
-					System.out.print(coches[i][j] + " | ");
+	public static void mostrar_coches(String coches[][], int idmodificar) {
+		if (idmodificar!=0) {
+			System.out.print(coches[0][0] + " | ");
+			System.out.print(coches[0][1] + " | ");
+			System.out.print(coches[0][2] + " | ");
+			System.out.print(coches[0][3] + " | ");
+			System.out.println(coches[0][4] + " | ");
+			System.out.print(coches[idmodificar][0] + " | ");
+			System.out.print(coches[idmodificar][1] + " | ");
+			System.out.print(coches[idmodificar][2] + " | ");
+			System.out.print(coches[idmodificar][3] + " | ");
+			System.out.println(coches[idmodificar][4] + " | ");
+		}
+		else {
+			for (int i=0; i<coches.length; i++){
+				if (coches[i][0]!=null) {
+					for (int j=0; j<coches[i].length; j++) {
+						System.out.print(coches[i][j] + " | ");
+					}
+				System.out.println("");
 				}
-			System.out.println("");
 			}
 		}
 	}
-	public static int posicion(String coches[][], int idmodificar, String cadena_idcoche) {
+	public static int posicioncoches(String coches[][], int idmodificar, String cadena_idcoche) {
 		int posicion=-1;
 		cadena_idcoche=Integer.toString(idmodificar);
 		for (int i=1; i<coches.length; i++) {
@@ -227,6 +273,5 @@ public class concesionarioIvancamps {
 		}
 		return posicion;
 	}
-	
-	
+
 }
