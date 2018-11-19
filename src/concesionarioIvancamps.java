@@ -26,16 +26,26 @@ public class concesionarioIvancamps {
 		String modelo;
 		String precio_venta;
 		String precio_compra;
-		boolean seguir=true, admin_correcto=false, seguir_admin=true;
+		String dni;
+		String nombre;
+		String apellido_uno;
+		String apellido_dos;
+		String correo;
+		String clave;
+		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false;
+		boolean dnivalido;
 		int contador=0;
 		final int filas_coches=20;
 		final int columnas_coches=5;
-		//final int filas_usuarios
+		final int filas_usuarios=30;
+		final int columnas_usuarios=6;
 		final double IVA=0.21;
 		Scanner sc=new Scanner(System.in);
 		String coches[][]=new String[filas_coches][columnas_coches];
-		//String usuarios[][]=new String[][];
+		String usuarios[][]=new String[filas_usuarios][columnas_usuarios];
 		idcoche=iniciar_coches(coches, idcoche, cadena_idcoche);
+		iniciar_usuarios(usuarios);
+		System.out.println(usuarios[1][4]);
 		do {
 			menu_principal();
 			opcion=sc.next();
@@ -104,7 +114,7 @@ public class concesionarioIvancamps {
 							mostrar_coches(coches, idmodificar);
 							seguir_admin=true;
 							break;
-						case "5": System.out.println(opcion);
+						case "5": 
 								seguir_admin=false;
 							break;
 						default:
@@ -119,14 +129,60 @@ public class concesionarioIvancamps {
 				}
 				break;
 			case "2":
-				break;
-			case "3":
-				seguir=false;
-				break;
-			default:
-				System.out.println("Opcion erronea");
-				seguir=true;
-			}
+				do {
+					menu_usuario_uno();
+					opcion=sc.next();
+					switch(opcion) {
+					case "1":
+						System.out.print("Introduce tu e-mail: ");
+						correo=sc.next();
+						System.out.print("Introduce tu contraseña de acceso: ");
+						clave=sc.next();
+						usuario_correcto=comprobar_usuario(usuarios, correo, clave, usuario_correcto);
+						if (usuario_correcto) {
+							
+						}
+						else {
+							System.out.println("Usuario y/o contraseña incorrectos.");
+						}
+						break;
+					case "2":
+						System.out.print("Introduce tu DNI: ");
+						dni=sc.next();
+						dnivalido=comprobar(dni);
+						if (dnivalido){
+							System.out.println("El DNI introducido es valido");
+							System.out.print("Introduce tu nombre: ");
+							nombre=sc.next();
+							System.out.print("Introduce tu primer apellido: ");
+							apellido_uno=sc.next();
+							System.out.print("Introduce tu segundo apellido: ");
+							apellido_dos=sc.next();
+							System.out.print("Introduce tu correo: ");
+							correo=sc.next();
+							System.out.print("Introduce tu contraseña: ");
+							clave=sc.next();
+							registro(usuarios, dni, nombre, apellido_uno, apellido_dos, correo, clave);
+						}
+						else {
+							System.out.println("El DNI introducido NO es valido");
+						}
+						seguir_usuario=true;
+						break;
+					case "3":
+						seguir_usuario=false;
+						break;
+					default:	
+					}
+				}while(seguir_usuario);
+					break;
+				case "3":
+					seguir=false;
+					break;
+				default:
+					System.out.println("Opcion erronea");
+					seguir=true;
+				}
 		}while(seguir);
 	}
 	public static int iniciar_coches(String coches[][], int idcoche, String cadena_idcoche) {
@@ -183,6 +239,43 @@ public class concesionarioIvancamps {
 		idcoche++;
 		return idcoche;
 	}
+	public static void iniciar_usuarios(String usuarios[][]) {
+		//cabecera
+		usuarios[0][0]="DNI";
+		usuarios[0][1]="NOMBRE";
+		usuarios[0][2]="APELLIDO_1";
+		usuarios[0][3]="APELLIDO_2";
+		usuarios[0][4]="CORREO";
+		usuarios[0][5]="CLAVE";
+		//usuario1
+		usuarios[1][0]="05994241G";
+		usuarios[1][1]="Ivan";
+		usuarios[1][2]="Camps";
+		usuarios[1][3]="Sanchez";
+		usuarios[1][4]="icamps555@gmail.com";
+		usuarios[1][5]="i4576_";
+		//usuario2
+		usuarios[2][0]="62459735S";
+		usuarios[2][1]="María";
+		usuarios[2][2]="Serrano";
+		usuarios[2][3]="Castro";
+		usuarios[2][4]="mserranocastro@gmail.com";
+		usuarios[2][5]="m3649z";
+		//usuario3
+		usuarios[3][0]="75730953A";
+		usuarios[3][1]="Lucia";
+		usuarios[3][2]="Gonzalez";
+		usuarios[3][3]="Navarro";
+		usuarios[3][4]="lgonzaleznavarro@gmail.com";
+		usuarios[3][5]="l8396:";
+		//usuario4
+		usuarios[4][0]="31295249T";
+		usuarios[4][1]="Fernando";
+		usuarios[4][2]="Frutos";
+		usuarios[4][3]="Lorca";
+		usuarios[4][4]="ffrutoslorca@gmail.com";
+		usuarios[4][5]="f2748#";
+	}
 	public static void menu_principal() {
 		System.out.println("Bienvenido al concesionario de supercoches Camps' Supercars");
 		System.out.println("|-------------------------------|");
@@ -207,7 +300,70 @@ public class concesionarioIvancamps {
 		System.out.println("3.- Eliminar coches");
 		System.out.println("4.- Mostrar coches");
 		System.out.println("5.- Cerrar sesion");
-		System.out.print("Selecciona una opcion: ");
+		System.out.print("Introduce una opcion: ");
+	}
+	public static void menu_usuario_uno() {
+		System.out.println("|-----------------------|");
+		System.out.println("| 1.- Iniciar sesion    |");
+		System.out.println("| 2.- Registrarse       |");
+		System.out.println("| 3.- Salir             |");
+		System.out.println("|-----------------------|");
+		System.out.print("Introduce una opcion: ");
+	}
+	public static boolean comprobar(String dniAComprobar){
+        char[] letraDni = {
+            'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D',  'X',  'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'
+        };  
+        String num= "";
+        int ind = 0;  
+        boolean valido=true;
+        if(dniAComprobar.length() == 8) {
+             dniAComprobar = "0" + dniAComprobar;
+        }
+        if (!Character.isLetter(dniAComprobar.charAt(8))) {
+             valido=false;  
+        }
+        if (dniAComprobar.length() != 9){   
+        	valido=false;
+        }  
+        for (int i=0; i<8; i++) {
+             if(!Character.isDigit(dniAComprobar.charAt(i))){
+            	 valido=false;    
+             }
+             num += dniAComprobar.charAt(i);     
+        }
+        ind = Integer.parseInt(num);
+        ind %= 23;
+        if ((Character.toUpperCase(dniAComprobar.charAt(8))) != letraDni[ind]){
+        	valido=false;
+       }  
+        return valido;
+   	} // fin comprobar
+	public static void registro(String usuarios[][], String dni, String nombre, String apellido_uno, String apellido_dos, String correo, String clave) {
+		for (int i=1; i<usuarios.length; i++) {
+			if (usuarios[i][0]==null) {
+				usuarios[i][0]=dni;
+				usuarios[i][1]=nombre;
+				usuarios[i][2]=apellido_uno;
+				usuarios[i][3]=apellido_dos;
+				usuarios[i][4]=correo;
+				usuarios[i][5]=clave;
+				i=usuarios.length;
+				System.out.println("Te has registrado correctamente.");
+			}
+		}
+	}
+	public static boolean comprobar_usuario(String usuarios[][], String correo, String clave, boolean usuario_correcto) {
+		for (int i=1; i<usuarios.length; i++) {
+			if (usuarios[i][4]!=null && usuarios[i][5]!=null) {
+				if (usuarios[i][4].equals(correo) && usuarios[i][5].equals(clave)) {
+					usuario_correcto=true;
+					System.out.println("Has iniciado sesion correctamente.");
+					i=usuarios.length;
+				}
+			}
+		}
+		return usuario_correcto;
 	}
 	public static int agregar_modificar_coches(String coches[][], int idcoche, String cadena_idcoche, String marca, String modelo, String precio_venta, String precio_compra, int idmodificar) {
 		if (idmodificar!=0){	
