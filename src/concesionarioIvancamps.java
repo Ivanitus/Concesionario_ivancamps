@@ -32,9 +32,10 @@ public class concesionarioIvancamps {
 		String apellido_dos;
 		String correo;
 		String clave;
-		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false;
+		int precioconiva;
+		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false, seguir_usuario_iniciado=true;
 		boolean dnivalido;
-		int contador=0;
+		int numcocheusuario=0;
 		final int filas_coches=20;
 		final int columnas_coches=5;
 		final int filas_usuarios=30;
@@ -59,12 +60,14 @@ public class concesionarioIvancamps {
 					do {
 					menu_admin();
 					opcion=sc.next();
+					sc.nextLine();
 						switch(opcion) {
 						case "1": 
 							System.out.print("Introduzca la marca del coche: ");
-							marca=sc.next();
+							marca=sc.nextLine();
+							sc.nextLine();
 							System.out.print("Introduzca el modelo: ");
-							modelo=sc.next();
+							modelo=sc.nextLine();
 							System.out.print("Introduzca el precio de venta del coche: ");
 							precio_venta=sc.next();
 							System.out.print("Introduzca el precio por el que comprarás el coche al cliente: ");
@@ -140,7 +143,33 @@ public class concesionarioIvancamps {
 						clave=sc.next();
 						usuario_correcto=comprobar_usuario(usuarios, correo, clave, usuario_correcto);
 						if (usuario_correcto) {
-							
+							do {
+								menu_usuario_dos();
+								opcion=sc.next();
+								sc.nextLine();
+								switch(opcion) {
+								case "1":
+									System.out.print("Introduce el modelo del coche que desea comprar: ");
+									modelo=sc.nextLine();
+									numcocheusuario=posicion_coche_usuario(coches, modelo);
+									seguir_usuario_iniciado=true;
+									break;
+								case "2":
+									seguir_usuario_iniciado=true;
+									break;
+								case "3":
+									mostrar_coches(coches, idmodificar);
+									seguir_usuario_iniciado=true;
+									break;
+								case "4":
+									seguir_usuario_iniciado=false;
+									break;
+								default:
+									System.out.println("Opcion erronea");
+									seguir_usuario_iniciado=true;
+									break;
+								}
+							}while(seguir_usuario_iniciado);
 						}
 						else {
 							System.out.println("Usuario y/o contraseña incorrectos.");
@@ -149,11 +178,13 @@ public class concesionarioIvancamps {
 					case "2":
 						System.out.print("Introduce tu DNI: ");
 						dni=sc.next();
+						sc.nextLine();
 						dnivalido=comprobar(dni);
 						if (dnivalido){
 							System.out.println("El DNI introducido es valido");
 							System.out.print("Introduce tu nombre: ");
-							nombre=sc.next();
+							nombre=sc.nextLine();
+							
 							System.out.print("Introduce tu primer apellido: ");
 							apellido_uno=sc.next();
 							System.out.print("Introduce tu segundo apellido: ");
@@ -187,7 +218,7 @@ public class concesionarioIvancamps {
 	}
 	public static int iniciar_coches(String coches[][], int idcoche, String cadena_idcoche) {
 		//cabecera
-		coches[0][0]="ID COCHE";
+		coches[0][0]="NUM COCHE";
 		coches[0][1]="MARCA";
 		coches[0][2]="MODELO";
 		coches[0][3]="PRECIO VENTA";
@@ -295,11 +326,13 @@ public class concesionarioIvancamps {
 		return admin_correcto;	
 	}
 	public static void menu_admin() {
-		System.out.println("1.- Agregar coches");
-		System.out.println("2.- Modificar coches");
-		System.out.println("3.- Eliminar coches");
-		System.out.println("4.- Mostrar coches");
-		System.out.println("5.- Cerrar sesion");
+		System.out.println("|-----------------------|");
+		System.out.println("| 1.- Agregar coches    |");
+		System.out.println("| 2.- Modificar coches  |");
+		System.out.println("| 3.- Eliminar coches   |");
+		System.out.println("| 4.- Mostrar coches    |");
+		System.out.println("| 5.- Cerrar sesion     |");
+		System.out.println("|-----------------------|");
 		System.out.print("Introduce una opcion: ");
 	}
 	public static void menu_usuario_uno() {
@@ -365,6 +398,15 @@ public class concesionarioIvancamps {
 		}
 		return usuario_correcto;
 	}
+	public static void menu_usuario_dos() {
+		System.out.println("|----------------------------------------------|");
+		System.out.println("| 1.- Comprar coches                           |");
+		System.out.println("| 2.- Vender un coche al concesionario         |");
+		System.out.println("| 3.- Mostrar el listado de coches disponibles |");
+		System.out.println("| 4.- Cerrar sesion                            |");
+		System.out.println("|----------------------------------------------|");
+		System.out.print("Introduce una opcion: ");
+	}
 	public static int agregar_modificar_coches(String coches[][], int idcoche, String cadena_idcoche, String marca, String modelo, String precio_venta, String precio_compra, int idmodificar) {
 		if (idmodificar!=0){	
 			coches[idmodificar][0]=cadena_idcoche;
@@ -428,6 +470,19 @@ public class concesionarioIvancamps {
 			}
 		}
 		return posicion;
+	}
+	public static int posicion_coche_usuario(String coches[][], String modelo) {
+		int coche_usuario=0;
+		for(int i=1; i<coches.length; i++) {
+			if(coches[i][2]!=null) {
+				if(coches[i][2].equals(modelo)) {
+					coche_usuario=i;
+					System.out.println("Modelo disponible (" + coches[i][2] + ")");
+					i=coches.length;
+				}
+			}
+		}
+		return coche_usuario;
 	}
 
 }
