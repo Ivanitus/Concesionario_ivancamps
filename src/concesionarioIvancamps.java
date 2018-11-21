@@ -17,36 +17,26 @@ public class concesionarioIvancamps {
 		// TODO Auto-generated method stub
 		final String admin="admin";
 	 	final String passwd_admin="admin123";
-		String usuario_introducido, passwd_introducido;
-		String opcion;
-		int idcoche=1;
-		int idmodificar=0;
-		String cadena_idcoche=null;
-		String marca;
-		String modelo;
-		String precio_venta;
-		String precio_compra;
-		String dni;
-		String nombre;
-		String apellido_uno;
-		String apellido_dos;
-		String correo;
-		String clave;
-		int precioconiva;
-		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false, seguir_usuario_iniciado=true;
-		boolean dnivalido;
-		int numcocheusuario=0;
+		String usuario_introducido, passwd_introducido, opcion, cadena_idcoche=null, marca, modelo , precio_venta, precio_compra;
+		String dni, nombre, apellido_uno, apellido_dos, correo, clave, confirmarcompra, contador_cadena=null;
+		int idcoche=1, idmodificar=0, numcocheusuario=0, contador=0;
+		double precioconiva;
+		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false, seguir_usuario_iniciado=true, dnivalido;
+		boolean usuarioiniciado=false, coche_encontrado=false;
 		final int filas_coches=20;
-		final int columnas_coches=5;
+		final int columnas_coches=7;
 		final int filas_usuarios=30;
 		final int columnas_usuarios=6;
+		final int filas_cochescomprados=50;
+		final int columnas_cochescomprados=7;
 		final double IVA=0.21;
 		Scanner sc=new Scanner(System.in);
 		String coches[][]=new String[filas_coches][columnas_coches];
 		String usuarios[][]=new String[filas_usuarios][columnas_usuarios];
+		String cochescomprados_usuarios[][]=new String[filas_cochescomprados][columnas_cochescomprados];
 		idcoche=iniciar_coches(coches, idcoche, cadena_idcoche);
 		iniciar_usuarios(usuarios);
-		System.out.println(usuarios[1][4]);
+		iniciar_cochescomprados_usuarios(cochescomprados_usuarios, coches, usuarios);
 		do {
 			menu_principal();
 			opcion=sc.next();
@@ -65,7 +55,7 @@ public class concesionarioIvancamps {
 						case "1": 
 							System.out.print("Introduzca la marca del coche: ");
 							marca=sc.nextLine();
-							sc.nextLine();
+							System.out.print("");
 							System.out.print("Introduzca el modelo: ");
 							modelo=sc.nextLine();
 							System.out.print("Introduzca el precio de venta del coche: ");
@@ -80,7 +70,7 @@ public class concesionarioIvancamps {
 							idmodificar=sc.nextInt();
 							idmodificar=posicioncoches(coches, idmodificar, cadena_idcoche);
 							if (idmodificar!=-1){
-								mostrar_coches(coches, idmodificar);
+								mostrar_coches(coches, idmodificar, usuarioiniciado);
 								cadena_idcoche=coches[idmodificar][0];
 								System.out.print("Introduce la marca del coche: ");
 								marca=sc.next();
@@ -91,7 +81,7 @@ public class concesionarioIvancamps {
 								System.out.print("Introduzca el precio por el que comprarás el coche al cliente: ");
 								precio_compra=sc.next();
 								idcoche=agregar_modificar_coches(coches, idcoche, cadena_idcoche, marca, modelo, precio_venta, precio_compra, idmodificar);
-								mostrar_coches(coches, idmodificar);
+								mostrar_coches(coches, idmodificar, usuarioiniciado);
 								idmodificar=0;
 								
 							}
@@ -102,7 +92,7 @@ public class concesionarioIvancamps {
 							idmodificar=sc.nextInt();
 							idmodificar=posicioncoches(coches, idmodificar, cadena_idcoche);
 							if (idmodificar!=1) {
-								mostrar_coches(coches, idmodificar);
+								mostrar_coches(coches, idmodificar, usuarioiniciado);
 								cadena_idcoche=null;
 								marca=null;
 								modelo=null;
@@ -114,10 +104,18 @@ public class concesionarioIvancamps {
 							seguir_admin=true;
 							break;
 						case "4": 
-							mostrar_coches(coches, idmodificar);
+							mostrar_coches(coches, idmodificar, usuarioiniciado);
 							seguir_admin=true;
 							break;
-						case "5": 
+						case "5":
+							mostrarusuariosregistrados(usuarios);
+							seguir_admin=true;
+							break;
+						case "6":
+							mostrar_cochescomprados_usuarios(cochescomprados_usuarios);
+							seguir_admin=true;
+							break;
+						case "7": 
 								seguir_admin=false;
 							break;
 						default:
@@ -144,6 +142,7 @@ public class concesionarioIvancamps {
 						usuario_correcto=comprobar_usuario(usuarios, correo, clave, usuario_correcto);
 						if (usuario_correcto) {
 							do {
+								usuarioiniciado=true;
 								menu_usuario_dos();
 								opcion=sc.next();
 								sc.nextLine();
@@ -152,17 +151,29 @@ public class concesionarioIvancamps {
 									System.out.print("Introduce el modelo del coche que desea comprar: ");
 									modelo=sc.nextLine();
 									numcocheusuario=posicion_coche_usuario(coches, modelo);
+									coche_encontrado=coche_existe(coches, numcocheusuario, modelo, coche_encontrado);
+									if (coche_encontrado) {
+										precioconiva=calcularprecio(coches, numcocheusuario, IVA);
+										System.out.print("¿Confirmar compra?: ");
+										confirmarcompra=sc.next();
+										confirmaciondecompra(coches, confirmarcompra, numcocheusuario, contador, correo, modelo, contador_cadena, usuarios, cochescomprados_usuarios);
+									}
+									else if(!coche_encontrado){
+										System.out.println("Coche no encontrado");
+									}
 									seguir_usuario_iniciado=true;
 									break;
 								case "2":
 									seguir_usuario_iniciado=true;
 									break;
 								case "3":
-									mostrar_coches(coches, idmodificar);
+									mostrar_coches(coches, idmodificar, usuarioiniciado);
 									seguir_usuario_iniciado=true;
 									break;
 								case "4":
+									usuarioiniciado=false;
 									seguir_usuario_iniciado=false;
+									seguir_usuario=false;
 									break;
 								default:
 									System.out.println("Opcion erronea");
@@ -184,7 +195,6 @@ public class concesionarioIvancamps {
 							System.out.println("El DNI introducido es valido");
 							System.out.print("Introduce tu nombre: ");
 							nombre=sc.nextLine();
-							
 							System.out.print("Introduce tu primer apellido: ");
 							apellido_uno=sc.next();
 							System.out.print("Introduce tu segundo apellido: ");
@@ -208,6 +218,7 @@ public class concesionarioIvancamps {
 				}while(seguir_usuario);
 					break;
 				case "3":
+					System.out.println("Gracias por usar el programa!");
 					seguir=false;
 					break;
 				default:
@@ -223,6 +234,8 @@ public class concesionarioIvancamps {
 		coches[0][2]="MODELO";
 		coches[0][3]="PRECIO VENTA";
 		coches[0][4]="PRECIO COMPRA";
+		coches[0][5]="COCHES VENDIDOS";
+		coches[0][6]="COCHES COMPRADOS";
 		//modelo 1
 		cadena_idcoche=Integer.toString(idcoche);
 		coches[1][0]=cadena_idcoche;
@@ -230,6 +243,8 @@ public class concesionarioIvancamps {
 		coches[1][2]="488 Spider";
 		coches[1][3]="264275";
 		coches[1][4]="195000";
+		coches[1][5]="0";
+		coches[1][6]="0";
 		idcoche=Integer.parseInt(cadena_idcoche);
 		idcoche++;
 		//modelo 2
@@ -239,6 +254,8 @@ public class concesionarioIvancamps {
 		coches[2][2]="Huracan Performante";
 		coches[2][3]="298087";
 		coches[2][4]="205000";
+		coches[2][5]="0";
+		coches[2][6]="0";
 		idcoche=Integer.parseInt(cadena_idcoche);
 		idcoche++;
 		//modelo 3
@@ -248,6 +265,8 @@ public class concesionarioIvancamps {
 		coches[3][2]="911 GTS";
 		coches[3][3]="145029";
 		coches[3][4]="90000";
+		coches[3][5]="0";
+		coches[3][6]="0";
 		idcoche=Integer.parseInt(cadena_idcoche);
 		idcoche++;
 		//modelo 4
@@ -257,6 +276,8 @@ public class concesionarioIvancamps {
 		coches[4][2]="New Vantage";
 		coches[4][3]="149995";
 		coches[4][4]="95000";
+		coches[4][5]="0";
+		coches[4][6]="0";
 		idcoche=Integer.parseInt(cadena_idcoche);
 		idcoche++;
 		//modelo 5
@@ -266,6 +287,8 @@ public class concesionarioIvancamps {
 		coches[5][2]="Roadster";
 		coches[5][3]="212000";
 		coches[5][4]="-";
+		coches[5][5]="0";
+		coches[5][6]="0";
 		idcoche=Integer.parseInt(cadena_idcoche);
 		idcoche++;
 		return idcoche;
@@ -274,8 +297,8 @@ public class concesionarioIvancamps {
 		//cabecera
 		usuarios[0][0]="DNI";
 		usuarios[0][1]="NOMBRE";
-		usuarios[0][2]="APELLIDO_1";
-		usuarios[0][3]="APELLIDO_2";
+		usuarios[0][2]="APELLIDO 1";
+		usuarios[0][3]="APELLIDO 2";
 		usuarios[0][4]="CORREO";
 		usuarios[0][5]="CLAVE";
 		//usuario1
@@ -307,12 +330,46 @@ public class concesionarioIvancamps {
 		usuarios[4][4]="ffrutoslorca@gmail.com";
 		usuarios[4][5]="f2748#";
 	}
+	public static void iniciar_cochescomprados_usuarios(String cochescomprados_usuarios[][], String coches[][], String usuarios[][]) {
+		//cabecera
+		cochescomprados_usuarios[0][0]="DNI";
+		cochescomprados_usuarios[0][1]="NOMBRE";
+		cochescomprados_usuarios[0][2]="APELLIDO 1";
+		cochescomprados_usuarios[0][3]="APELLIDO 2";
+		cochescomprados_usuarios[0][4]="CORREO";
+		cochescomprados_usuarios[0][5]="MARCA";
+		cochescomprados_usuarios[0][6]="MODELO";
+		//compra 1
+		cochescomprados_usuarios[1][0]=usuarios[1][0];
+		cochescomprados_usuarios[1][1]=usuarios[1][1];
+		cochescomprados_usuarios[1][2]=usuarios[1][2];
+		cochescomprados_usuarios[1][3]=usuarios[1][3];
+		cochescomprados_usuarios[1][4]=usuarios[1][4];
+		cochescomprados_usuarios[1][5]=coches[5][1];
+		cochescomprados_usuarios[1][6]=coches[5][2];
+		//compra 2
+		cochescomprados_usuarios[2][0]=usuarios[4][0];
+		cochescomprados_usuarios[2][1]=usuarios[4][1];
+		cochescomprados_usuarios[2][2]=usuarios[4][2];
+		cochescomprados_usuarios[2][3]=usuarios[4][3];
+		cochescomprados_usuarios[2][4]=usuarios[4][4];
+		cochescomprados_usuarios[2][5]=coches[2][1];
+		cochescomprados_usuarios[2][6]=coches[2][2];
+		//compra 3
+		cochescomprados_usuarios[3][0]=usuarios[2][0];
+		cochescomprados_usuarios[3][1]=usuarios[2][1];
+		cochescomprados_usuarios[3][2]=usuarios[2][2];
+		cochescomprados_usuarios[3][3]=usuarios[2][3];
+		cochescomprados_usuarios[3][4]=usuarios[2][4];
+		cochescomprados_usuarios[3][5]=coches[3][1];
+		cochescomprados_usuarios[3][6]=coches[3][2];
+	}
 	public static void menu_principal() {
 		System.out.println("Bienvenido al concesionario de supercoches Camps' Supercars");
 		System.out.println("|-------------------------------|");
 		System.out.println("| 1.- Entrar como administrador |");
 		System.out.println("| 2.- Entrar como usuario       |");
-		System.out.println("| 3.- Salir                     |");
+		System.out.println("| 3.- Salir del programa        |");
 		System.out.println("|-------------------------------|");
 		System.out.print("Introduce una opcion: ");
 	}
@@ -326,13 +383,15 @@ public class concesionarioIvancamps {
 		return admin_correcto;	
 	}
 	public static void menu_admin() {
-		System.out.println("|-----------------------|");
-		System.out.println("| 1.- Agregar coches    |");
-		System.out.println("| 2.- Modificar coches  |");
-		System.out.println("| 3.- Eliminar coches   |");
-		System.out.println("| 4.- Mostrar coches    |");
-		System.out.println("| 5.- Cerrar sesion     |");
-		System.out.println("|-----------------------|");
+		System.out.println("|-----------------------------------------------|");
+		System.out.println("| 1.- Agregar coches                            |");
+		System.out.println("| 2.- Modificar coches                          |");
+		System.out.println("| 3.- Eliminar coches                           |");
+		System.out.println("| 4.- Mostrar coches                            |");
+		System.out.println("| 5.- Mostrar usuarios registrados              |");
+		System.out.println("| 6.- Mostrar coches comprados por los usuarios |");
+		System.out.println("| 7.- Cerrar sesion                             |");
+		System.out.println("|-----------------------------------------------|");
 		System.out.print("Introduce una opcion: ");
 	}
 	public static void menu_usuario_uno() {
@@ -342,6 +401,17 @@ public class concesionarioIvancamps {
 		System.out.println("| 3.- Salir             |");
 		System.out.println("|-----------------------|");
 		System.out.print("Introduce una opcion: ");
+	}
+	public static void mostrarusuariosregistrados(String usuarios[][]) {
+		for (int i=0; i<usuarios.length; i++) {
+			if (usuarios[i][0]!=null) {
+				System.out.print(usuarios[i][0] + " | ");
+				System.out.print(usuarios[i][1] + " | ");
+				System.out.print(usuarios[i][2] + " | ");
+				System.out.print(usuarios[i][3] + " | ");
+				System.out.println(usuarios[i][4] + " | ");
+			}
+		}
 	}
 	public static boolean comprobar(String dniAComprobar){
         char[] letraDni = {
@@ -427,13 +497,15 @@ public class concesionarioIvancamps {
 					coches[i][2]=modelo;
 					coches[i][3]=precio_venta;
 					coches[i][4]=precio_compra;
+					coches[i][5]="0";
+					coches[i][6]="0";
 					i=coches.length;
 				}
 			}
 		}
 		return idcoche;
 	}
-	public static void mostrar_coches(String coches[][], int idmodificar) {
+	public static void mostrar_coches(String coches[][], int idmodificar, boolean usuarioiniciado) {
 		if (idmodificar!=0) {
 			System.out.print(coches[0][0] + " | ");
 			System.out.print(coches[0][1] + " | ");
@@ -445,6 +517,16 @@ public class concesionarioIvancamps {
 			System.out.print(coches[idmodificar][2] + " | ");
 			System.out.print(coches[idmodificar][3] + " | ");
 			System.out.println(coches[idmodificar][4] + " | ");
+		}
+		else if(usuarioiniciado) {
+			for (int i=0; i<coches.length; i++) {
+				if (coches[i][0]!=null) {
+					System.out.print(coches[i][1] + " | ");
+					System.out.print(coches[i][2] + " | ");
+					System.out.print(coches[i][3] + " | ");
+					System.out.println(coches[i][4] + " | ");
+				}
+			}
 		}
 		else {
 			for (int i=0; i<coches.length; i++){
@@ -484,5 +566,64 @@ public class concesionarioIvancamps {
 		}
 		return coche_usuario;
 	}
-
+	public static boolean coche_existe(String coches[][], int numcocheusuario, String modelo, boolean coche_encontrado) {
+		if (coches[numcocheusuario][2].equals(modelo)) {
+			coche_encontrado=true;
+		}
+		else {
+			coche_encontrado=false;
+		}
+		return coche_encontrado;
+	}
+	public static double calcularprecio(String coches[][], int numcocheusuario, double IVA) {
+		double preciofinal;
+		double precio=Double.valueOf(coches[numcocheusuario][3]);
+		preciofinal=precio*IVA+precio;
+		System.out.println("El precio del coche + IVA (21%) es: " + preciofinal + " euros");
+		return preciofinal;
+	}
+	public static void confirmaciondecompra(String coches[][], String confirmarcompra, int numcocheusuario, int contador, String correo, String modelo, String contador_cadena, String usuarios[][], String cochescomprados_usuarios[][]) {
+		if (confirmarcompra.equalsIgnoreCase("si")) {
+			System.out.println("Compra confirmada");
+			contador=Integer.parseInt(coches[numcocheusuario][5]);
+			contador++;
+			contador_cadena=Integer.toString(contador);
+			coches[numcocheusuario][5]=contador_cadena;
+			for (int i=0; i<cochescomprados_usuarios.length; i++) {
+				if (cochescomprados_usuarios[i][0]==null) {
+					i=usuarios.length;
+					for (int j=1; j<usuarios.length; j++) {
+						if (usuarios[j][4].equals(correo)) {
+							cochescomprados_usuarios[i][0]=usuarios[j][0];
+							cochescomprados_usuarios[i][1]=usuarios[j][1];
+							cochescomprados_usuarios[i][2]=usuarios[j][2];
+							cochescomprados_usuarios[i][3]=usuarios[j][3];
+							cochescomprados_usuarios[i][4]=usuarios[j][4];
+							j=usuarios.length;
+						}
+					}
+					for (int k=1; k<coches.length; k++) {
+						if(coches[k][2].equals(modelo)) {
+							cochescomprados_usuarios[i][5]=coches[k][1];
+							cochescomprados_usuarios[i][6]=coches[k][2];
+							k=coches.length;
+						}
+					}	
+				}
+			}
+		}
+	}
+	public static void mostrar_cochescomprados_usuarios(String cochescomprados_usuarios[][]) {
+		for (int i=0; i<cochescomprados_usuarios.length; i++) {
+			if (cochescomprados_usuarios[i][0]!=null) {
+				System.out.print(cochescomprados_usuarios[i][0] + " | ");
+				System.out.print(cochescomprados_usuarios[i][1] + " | ");
+				System.out.print(cochescomprados_usuarios[i][2] + " | ");
+				System.out.print(cochescomprados_usuarios[i][3] + " | ");
+				System.out.print(cochescomprados_usuarios[i][4] + " | ");
+				System.out.print(cochescomprados_usuarios[i][5] + " | ");
+				System.out.println(cochescomprados_usuarios[i][6] + " | ");
+			}
+		}
+	}
 }
