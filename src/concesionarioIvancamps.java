@@ -591,7 +591,6 @@ public class concesionarioIvancamps {
 			coches[numcocheusuario][5]=contador_cadena;
 			for (int i=0; i<cochescomprados_usuarios.length; i++) {
 				if (cochescomprados_usuarios[i][0]==null) {
-					i=usuarios.length;
 					for (int j=1; j<usuarios.length; j++) {
 						if (usuarios[j][4].equals(correo)) {
 							cochescomprados_usuarios[i][0]=usuarios[j][0];
@@ -608,7 +607,8 @@ public class concesionarioIvancamps {
 							cochescomprados_usuarios[i][6]=coches[k][2];
 							k=coches.length;
 						}
-					}	
+					}
+					i=cochescomprados_usuarios.length;	
 				}
 			}
 		}
