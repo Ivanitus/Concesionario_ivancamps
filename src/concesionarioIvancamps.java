@@ -164,6 +164,13 @@ public class concesionarioIvancamps {
 									seguir_usuario_iniciado=true;
 									break;
 								case "2":
+									System.out.print("Introduzca la marca del coche: ");
+									marca=sc.nextLine();
+									System.out.print("");
+									System.out.print("Introduzca el modelo: ");
+									modelo=sc.nextLine();
+									System.out.print("Introduzca el precio de venta del coche al concesionario: ");
+									precio_compra=sc.next();
 									seguir_usuario_iniciado=true;
 									break;
 								case "3":
@@ -566,7 +573,7 @@ public class concesionarioIvancamps {
 		int coche_usuario=0;
 		for(int i=1; i<coches.length; i++) {
 			if(coches[i][2]!=null) {
-				if(coches[i][2].equals(modelo)) {
+				if(coches[i][2].equalsIgnoreCase(modelo)) {
 					coche_usuario=i;
 					System.out.println("Modelo disponible (" + coches[i][2] + ")");
 					i=coches.length;
@@ -576,7 +583,7 @@ public class concesionarioIvancamps {
 		return coche_usuario;
 	}
 	public static boolean coche_existe(String coches[][], int numcocheusuario, String modelo, boolean coche_encontrado) {
-		if (coches[numcocheusuario][2].equals(modelo)) {
+		if (coches[numcocheusuario][2].equalsIgnoreCase(modelo)) {
 			coche_encontrado=true;
 		}
 		else {
@@ -611,7 +618,7 @@ public class concesionarioIvancamps {
 						}
 					}
 					for (int k=1; k<coches.length; k++) {
-						if(coches[k][2].equals(modelo)) {
+						if(coches[k][2].equalsIgnoreCase(modelo)) {
 							cochescomprados_usuarios[i][5]=coches[k][1];
 							cochescomprados_usuarios[i][6]=coches[k][2];
 							k=coches.length;
