@@ -19,7 +19,7 @@ public class concesionarioIvancamps {
 	 	final String passwd_admin="admin123";
 		String usuario_introducido, passwd_introducido, opcion, cadena_idcoche=null, marca, modelo , precio_venta, precio_compra;
 		String dni, nombre, apellido_uno, apellido_dos, correo, clave, confirmarcompra, contador_cadena=null;
-		int idcoche=1, idmodificar=0, numcocheusuario=0, contador=0;
+		int idcoche=1, idmodificar=0, numcocheusuario=0, contador=0, precioextra=12000;
 		double precioconiva;
 		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false, seguir_usuario_iniciado=true, dnivalido;
 		boolean usuarioiniciado=false, coche_encontrado=false;
@@ -169,8 +169,9 @@ public class concesionarioIvancamps {
 									System.out.print("");
 									System.out.print("Introduzca el modelo: ");
 									modelo=sc.nextLine();
-									System.out.print("Introduzca el precio de venta del coche al concesionario: ");
+									System.out.print("Introduzca el precio de venta del coche al concesionario (en caso de ya existir el modelo, introducir 0): ");
 									precio_compra=sc.next();
+									idcoche=vendercoches_clientes_concesionario_noexistente(coches, marca, modelo, precio_compra, cadena_idcoche, idcoche, precioextra, contador, contador_cadena);
 									seguir_usuario_iniciado=true;
 									break;
 								case "3":
@@ -628,6 +629,9 @@ public class concesionarioIvancamps {
 				}
 			}
 		}
+		else {
+			System.out.println("Compra cancelada");
+		}
 	}
 	public static void mostrar_cochescomprados_admin(String cochescomprados_usuarios[][]) {
 		for (int i=0; i<cochescomprados_usuarios.length; i++) {
@@ -659,5 +663,34 @@ public class concesionarioIvancamps {
 				}
 			}
 		}
+	}
+	public static int vendercoches_clientes_concesionario_noexistente (String coches[][], String marca, String modelo, String precio_compra, String cadena_idcoche, int idcoche, int precioextra, int contador, String contador_cadena) {
+		int precio;
+		for (int i=1; i<coches.length; i++) {
+				if (!modelo.equalsIgnoreCase(coches[i][2])) {
+					if (coches[i][0]==null) {
+						cadena_idcoche=Integer.toString(idcoche);
+						coches[i][0]=cadena_idcoche;
+						idcoche=Integer.parseInt(cadena_idcoche);
+						idcoche++;
+						coches[i][1]=marca;
+						coches[i][2]=modelo + " (usado)";
+						coches[i][4]=precio_compra;
+						precio=Integer.valueOf(coches[i][4]);
+						precioextra+=precio;
+						coches[i][3]=String.valueOf(precioextra);
+						coches[i][5]="0";
+						i=coches.length;
+					}
+				}
+				else {
+					contador=Integer.parseInt(coches[i][6]);
+					contador++;
+					contador_cadena=Integer.toString(contador);
+					coches[i][6]=contador_cadena;
+					i=coches.length;
+				}
+			}
+		return idcoche;
 	}
 }
