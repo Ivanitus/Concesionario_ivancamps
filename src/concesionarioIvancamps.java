@@ -21,11 +21,7 @@ public class concesionarioIvancamps {
 	 	final String passwd_admin="admin123";
 		String usuario_introducido, passwd_introducido, opcion, cadena_idcoche=null, marca, modelo , precio_venta, precio_compra;
 		String dni, nombre, apellido_uno, apellido_dos, correo, clave, confirmarcompra, contador_cadena=null;
-		Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-		int idcoche=1, idmodificar=0, numcocheusuario=0, contador=0, precioextra=12000;
-		double precioconiva;
-		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false, seguir_usuario_iniciado=true, dnivalido;
-		boolean usuarioiniciado=false, coche_encontrado=false;
+		final Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 		final int filas_coches=20;
 		final int columnas_coches=7;
 		final int filas_usuarios=30;
@@ -33,6 +29,10 @@ public class concesionarioIvancamps {
 		final int filas_cochescomprados_vendidos=50;
 		final int columnas_cochescomprados_vendidos=7;
 		final double IVA=0.21;
+		int idcoche=1, idmodificar=0, numcocheusuario=0, contador=0, precioextra=12000;
+		double precioconiva;
+		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false, seguir_usuario_iniciado=true, dnivalido;
+		boolean usuarioiniciado=false, coche_encontrado=false;
 		Scanner sc=new Scanner(System.in);
 		String coches[][]=new String[filas_coches][columnas_coches];
 		String usuarios[][]=new String[filas_usuarios][columnas_usuarios];
