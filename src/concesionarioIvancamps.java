@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -19,6 +21,7 @@ public class concesionarioIvancamps {
 	 	final String passwd_admin="admin123";
 		String usuario_introducido, passwd_introducido, opcion, cadena_idcoche=null, marca, modelo , precio_venta, precio_compra;
 		String dni, nombre, apellido_uno, apellido_dos, correo, clave, confirmarcompra, contador_cadena=null;
+		Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 		int idcoche=1, idmodificar=0, numcocheusuario=0, contador=0, precioextra=12000;
 		double precioconiva;
 		boolean seguir=true, admin_correcto=false, seguir_admin=true, seguir_usuario=true, usuario_correcto=false, seguir_usuario_iniciado=true, dnivalido;
@@ -39,6 +42,7 @@ public class concesionarioIvancamps {
 		iniciar_usuarios(usuarios);
 		iniciar_cochescomprados_usuarios(cochescomprados_usuarios, coches, usuarios);
 		iniciar_cochesvendidos_usuarios(cochesvendidos_usuarios, coches, usuarios);
+		
 		do {
 			menu_principal();
 			opcion=sc.next();
@@ -222,11 +226,12 @@ public class concesionarioIvancamps {
 							apellido_uno=sc.next();
 							System.out.print("Introduce tu segundo apellido: ");
 							apellido_dos=sc.next();
-							System.out.print("Introduce tu correo: ");
+							System.out.print("Introduce tu correo (nombredeusuario@nombrededominio.extension): ");
 							correo=sc.next();
+							Matcher mather=pattern.matcher(correo);
 							System.out.print("Introduce tu contraseña: ");
 							clave=sc.next();
-							registro(usuarios, dni, nombre, apellido_uno, apellido_dos, correo, clave);
+							registro(usuarios, dni, nombre, apellido_uno, apellido_dos, correo, clave, pattern, mather);
 						}
 						else {
 							System.out.println("El DNI introducido NO es valido");
@@ -500,9 +505,9 @@ public class concesionarioIvancamps {
        }  
         return valido;
    	} // fin comprobar
-	public static void registro(String usuarios[][], String dni, String nombre, String apellido_uno, String apellido_dos, String correo, String clave) {
+	public static void registro(String usuarios[][], String dni, String nombre, String apellido_uno, String apellido_dos, String correo, String clave, Pattern pattern, Matcher mather) {
 		for (int i=1; i<usuarios.length; i++) {
-			if (usuarios[i][0]==null && !usuarios[i][0].equalsIgnoreCase(dni) && !usuarios[i][4].equals(correo)) {
+			if (usuarios[i][0]==null && !usuarios[i][0].equalsIgnoreCase(dni) && !usuarios[i][4].equals(correo) && mather.find()==true) {
 				usuarios[i][0]=dni;
 				usuarios[i][1]=nombre;
 				usuarios[i][2]=apellido_uno;
@@ -511,6 +516,10 @@ public class concesionarioIvancamps {
 				usuarios[i][5]=clave;
 				i=usuarios.length;
 				System.out.println("Te has registrado correctamente.");
+			}
+			else if (mather.find()==false) {
+				System.out.println("El e-mail introducido es incorrecto. Debe contener el formato nombredeusuario@nombrededominio.extension");
+				i=usuarios.length;
 			}
 			else {
 				System.out.println("El usuario ya existe");
