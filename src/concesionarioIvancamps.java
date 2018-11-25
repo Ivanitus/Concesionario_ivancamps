@@ -27,16 +27,18 @@ public class concesionarioIvancamps {
 		final int columnas_coches=7;
 		final int filas_usuarios=30;
 		final int columnas_usuarios=6;
-		final int filas_cochescomprados=50;
-		final int columnas_cochescomprados=7;
+		final int filas_cochescomprados_vendidos=50;
+		final int columnas_cochescomprados_vendidos=7;
 		final double IVA=0.21;
 		Scanner sc=new Scanner(System.in);
 		String coches[][]=new String[filas_coches][columnas_coches];
 		String usuarios[][]=new String[filas_usuarios][columnas_usuarios];
-		String cochescomprados_usuarios[][]=new String[filas_cochescomprados][columnas_cochescomprados];
+		String cochescomprados_usuarios[][]=new String[filas_cochescomprados_vendidos][columnas_cochescomprados_vendidos];
+		String cochesvendidos_usuarios[][]=new String[filas_cochescomprados_vendidos][columnas_cochescomprados_vendidos];
 		idcoche=iniciar_coches(coches, idcoche, cadena_idcoche);
 		iniciar_usuarios(usuarios);
 		iniciar_cochescomprados_usuarios(cochescomprados_usuarios, coches, usuarios);
+		iniciar_cochesvendidos_usuarios(cochesvendidos_usuarios, coches, usuarios);
 		do {
 			menu_principal();
 			opcion=sc.next();
@@ -115,7 +117,11 @@ public class concesionarioIvancamps {
 							mostrar_cochescomprados_admin(cochescomprados_usuarios);
 							seguir_admin=true;
 							break;
-						case "7": 
+						case "7":
+							mostrar_cochesvendidos_admin(cochesvendidos_usuarios);
+							seguir_admin=true;
+							break;
+						case "8": 
 								seguir_admin=false;
 							break;
 						default:
@@ -171,7 +177,8 @@ public class concesionarioIvancamps {
 									modelo=sc.nextLine();
 									System.out.print("Introduzca el precio de venta del coche al concesionario (en caso de ya existir el modelo, introducir 0): ");
 									precio_compra=sc.next();
-									idcoche=vendercoches_clientes_concesionario_noexistente(coches, marca, modelo, precio_compra, cadena_idcoche, idcoche, precioextra, contador, contador_cadena);
+									idcoche=vendercoches_clientes_concesionario(coches, marca, modelo, precio_compra, cadena_idcoche, idcoche, precioextra, contador, contador_cadena);
+									registrocochesvendidosusuarios(coches, usuarios, cochesvendidos_usuarios, marca, modelo, correo);
 									seguir_usuario_iniciado=true;
 									break;
 								case "3":
@@ -183,6 +190,10 @@ public class concesionarioIvancamps {
 									seguir_usuario_iniciado=true;
 									break;
 								case "5":
+									mostrar_cochesvendidos_usuarios(cochesvendidos_usuarios, usuarios, correo);
+									seguir_usuario_iniciado=true;
+									break;
+								case "6":
 									usuarioiniciado=false;
 									seguir_usuario_iniciado=false;
 									seguir_usuario=false;
@@ -376,6 +387,40 @@ public class concesionarioIvancamps {
 		cochescomprados_usuarios[3][5]=coches[3][1];
 		cochescomprados_usuarios[3][6]=coches[3][2];
 	}
+	public static void iniciar_cochesvendidos_usuarios(String cochesvendidos_usuarios[][], String coches[][], String usuarios[][]) {
+		//cabecera
+		cochesvendidos_usuarios[0][0]="DNI";
+		cochesvendidos_usuarios[0][1]="NOMBRE";
+		cochesvendidos_usuarios[0][2]="APELLIDO 1";
+		cochesvendidos_usuarios[0][3]="APELLIDO 2";
+		cochesvendidos_usuarios[0][4]="CORREO";
+		cochesvendidos_usuarios[0][5]="MARCA";
+		cochesvendidos_usuarios[0][6]="MODELO";
+		//compra 1
+		cochesvendidos_usuarios[1][0]=usuarios[1][0];
+		cochesvendidos_usuarios[1][1]=usuarios[1][1];
+		cochesvendidos_usuarios[1][2]=usuarios[1][2];
+		cochesvendidos_usuarios[1][3]=usuarios[1][3];
+		cochesvendidos_usuarios[1][4]=usuarios[1][4];
+		cochesvendidos_usuarios[1][5]=coches[2][1];
+		cochesvendidos_usuarios[1][6]=coches[2][2];
+		//compra 2
+		cochesvendidos_usuarios[2][0]=usuarios[4][0];
+		cochesvendidos_usuarios[2][1]=usuarios[4][1];
+		cochesvendidos_usuarios[2][2]=usuarios[4][2];
+		cochesvendidos_usuarios[2][3]=usuarios[4][3];
+		cochesvendidos_usuarios[2][4]=usuarios[4][4];
+		cochesvendidos_usuarios[2][5]=coches[4][1];
+		cochesvendidos_usuarios[2][6]=coches[4][2];
+		//compra 3
+		cochesvendidos_usuarios[3][0]=usuarios[2][0];
+		cochesvendidos_usuarios[3][1]=usuarios[2][1];
+		cochesvendidos_usuarios[3][2]=usuarios[2][2];
+		cochesvendidos_usuarios[3][3]=usuarios[2][3];
+		cochesvendidos_usuarios[3][4]=usuarios[2][4];
+		cochesvendidos_usuarios[3][5]=coches[1][1];
+		cochesvendidos_usuarios[3][6]=coches[1][2];
+	}
 	public static void menu_principal() {
 		System.out.println("Bienvenido al concesionario de supercoches Camps' Supercars");
 		System.out.println("|-------------------------------|");
@@ -402,7 +447,8 @@ public class concesionarioIvancamps {
 		System.out.println("| 4.- Mostrar coches                            |");
 		System.out.println("| 5.- Mostrar usuarios registrados              |");
 		System.out.println("| 6.- Mostrar coches comprados por los usuarios |");
-		System.out.println("| 7.- Cerrar sesion                             |");
+		System.out.println("| 7.- Mostrar usuarios que han vendido coches   |");
+		System.out.println("| 8.- Cerrar sesion                             |");
 		System.out.println("|-----------------------------------------------|");
 		System.out.print("Introduce una opcion: ");
 	}
@@ -490,7 +536,8 @@ public class concesionarioIvancamps {
 		System.out.println("| 2.- Vender un coche al concesionario         |");
 		System.out.println("| 3.- Mostrar el listado de coches disponibles |");
 		System.out.println("| 4.- Mostrar los coches que has comprado      |");
-		System.out.println("| 5.- Cerrar sesion                            |");
+		System.out.println("| 5.- Mostrar los coches que has vendido       |");
+		System.out.println("| 6.- Cerrar sesion                            |");
 		System.out.println("|----------------------------------------------|");
 		System.out.print("Introduce una opcion: ");
 	}
@@ -664,7 +711,7 @@ public class concesionarioIvancamps {
 			}
 		}
 	}
-	public static int vendercoches_clientes_concesionario_noexistente (String coches[][], String marca, String modelo, String precio_compra, String cadena_idcoche, int idcoche, int precioextra, int contador, String contador_cadena) {
+	public static int vendercoches_clientes_concesionario (String coches[][], String marca, String modelo, String precio_compra, String cadena_idcoche, int idcoche, int precioextra, int contador, String contador_cadena) {
 		int precio;
 		for (int i=1; i<coches.length; i++) {
 				if (!modelo.equalsIgnoreCase(coches[i][2])) {
@@ -674,12 +721,13 @@ public class concesionarioIvancamps {
 						idcoche=Integer.parseInt(cadena_idcoche);
 						idcoche++;
 						coches[i][1]=marca;
-						coches[i][2]=modelo + " (usado)";
+						coches[i][2]=modelo;
 						coches[i][4]=precio_compra;
 						precio=Integer.valueOf(coches[i][4]);
 						precioextra+=precio;
 						coches[i][3]=String.valueOf(precioextra);
 						coches[i][5]="0";
+						coches[i][6]="1";
 						i=coches.length;
 					}
 				}
@@ -692,5 +740,60 @@ public class concesionarioIvancamps {
 				}
 			}
 		return idcoche;
+	}
+	public static void registrocochesvendidosusuarios(String coches[][], String usuarios[][], String cochesvendidos_usuarios[][], String marca, String modelo, String correo) {
+		for (int i=0; i<cochesvendidos_usuarios.length; i++) {
+			if (cochesvendidos_usuarios[i][0]==null) {
+				for (int j=1; j<usuarios.length; j++) {
+					if (usuarios[j][4].equals(correo)) {
+						cochesvendidos_usuarios[i][0]=usuarios[j][0];
+						cochesvendidos_usuarios[i][1]=usuarios[j][1];
+						cochesvendidos_usuarios[i][2]=usuarios[j][2];
+						cochesvendidos_usuarios[i][3]=usuarios[j][3];
+						cochesvendidos_usuarios[i][4]=usuarios[j][4];
+						j=usuarios.length;
+					}
+				}
+				for (int k=1; k<coches.length; k++) {
+					if(coches[k][2].equalsIgnoreCase(modelo)) {
+						cochesvendidos_usuarios[i][5]=coches[k][1];
+						cochesvendidos_usuarios[i][6]=coches[k][2];
+						k=coches.length;
+					}
+				}
+				i=cochesvendidos_usuarios.length;	
+			}
+		}
+	}
+	public static void mostrar_cochesvendidos_admin(String cochesvendidos_usuarios[][]) {
+		for (int i=0; i<cochesvendidos_usuarios.length; i++) {
+			if (cochesvendidos_usuarios[i][0]!=null) {
+				System.out.print(cochesvendidos_usuarios[i][0] + " | ");
+				System.out.print(cochesvendidos_usuarios[i][1] + " | ");
+				System.out.print(cochesvendidos_usuarios[i][2] + " | ");
+				System.out.print(cochesvendidos_usuarios[i][3] + " | ");
+				System.out.print(cochesvendidos_usuarios[i][4] + " | ");
+				System.out.print(cochesvendidos_usuarios[i][5] + " | ");
+				System.out.println(cochesvendidos_usuarios[i][6] + " | ");
+			}
+		}
+	}
+	public static void mostrar_cochesvendidos_usuarios(String cochesvendidos_usuarios[][], String usuarios[][], String correo) {
+		for (int i=0; i<cochesvendidos_usuarios.length; i++) {
+			if (cochesvendidos_usuarios[i][0]!=null) {
+				for (int j=1; j<usuarios.length; j++) {
+					if (cochesvendidos_usuarios[i][4].equals(correo)) {
+						System.out.print(cochesvendidos_usuarios[i][0] + " | ");
+						System.out.print(cochesvendidos_usuarios[i][1] + " | ");
+						System.out.print(cochesvendidos_usuarios[i][2] + " | ");
+						System.out.print(cochesvendidos_usuarios[i][3] + " | ");
+						System.out.print(cochesvendidos_usuarios[i][4] + " | ");
+						System.out.print(cochesvendidos_usuarios[i][5] + " | ");
+						System.out.println(cochesvendidos_usuarios[i][6] + " | ");
+						j=usuarios.length;
+					}
+				}
+			}
+		}
 	}
 }
