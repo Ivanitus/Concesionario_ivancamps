@@ -25,7 +25,7 @@ public class concesionarioIvancamps {
 		int idCoche=1, idModificar=0, numCocheUsuario=0, contador=0, precioExtra=6000;
 		double precioConIVA;
 		boolean seguir=true, adminCorrecto=false, seguirAdmin=true, seguirUsuario=true, usuarioCorrecto=false, seguirUsuarioIniciado=true, dniValido;
-		boolean usuarioIniciado=false, cocheEncontrado=false;
+		boolean usuarioIniciado=false, cocheEncontrado=false, dniNoRepetido=true;
 		Scanner sc=new Scanner(System.in); //creacion del objeto Scanner
 		String coches[][]=new String[FILAS_COCHES][COLUMNAS_COCHES]; //array para guardar los coches
 		String usuarios[][]=new String[FILAS_USUARIOS][COLUMNAS_USUARIOS]; //array para guardar la informacion de los usuarios
@@ -221,19 +221,26 @@ public class concesionarioIvancamps {
 						dni=sc.next();
 						sc.nextLine();
 						dniValido=comprobarDni(dni);
+						dniNoRepetido=comprobarDniRepetido(usuarios, dni, dniNoRepetido);
 						if (dniValido){
 							System.out.println("El DNI introducido es valido");
-							System.out.print("Introduce tu nombre: ");
-							nombre=sc.nextLine();
-							System.out.print("Introduce tu primer apellido: ");
-							apellidoUno=sc.next();
-							System.out.print("Introduce tu segundo apellido: ");
-							apellidoDos=sc.next();
-							System.out.print("Introduce tu correo (nombredeusuario@nombrededominio.extension): ");
-							correo=sc.next();
-							System.out.print("Introduce tu contraseña: ");
-							clave=sc.next();
-							realizarRegistroUsuarios(usuarios, dni, nombre, apellidoUno, apellidoDos, correo, clave);
+							System.out.println("");
+							if (dniNoRepetido) {
+								System.out.print("Introduce tu nombre: ");
+								nombre=sc.nextLine();
+								System.out.print("Introduce tu primer apellido: ");
+								apellidoUno=sc.next();
+								System.out.print("Introduce tu segundo apellido: ");
+								apellidoDos=sc.next();
+								System.out.print("Introduce tu correo (nombredeusuario@nombrededominio.extension): ");
+								correo=sc.next();
+								System.out.print("Introduce tu contraseña: ");
+								clave=sc.next();
+								realizarRegistroUsuarios(usuarios, dni, nombre, apellidoUno, apellidoDos, correo, clave);
+							}
+							else {
+								System.out.println("El DNI introducido ya esta registrado");
+							}
 						}
 						else {
 							System.out.println("El DNI introducido NO es valido");
@@ -351,7 +358,7 @@ public class concesionarioIvancamps {
 		usuarios[1][5]="i4576_";
 		//usuario2
 		usuarios[2][0]="62459735S";
-		usuarios[2][1]="María";
+		usuarios[2][1]="Maria";
 		usuarios[2][2]="Serrano";
 		usuarios[2][3]="Castro";
 		usuarios[2][4]="mserranocastro@gmail.com";
@@ -519,7 +526,7 @@ public class concesionarioIvancamps {
 		            if(!Character.isDigit(dniAComprobar.charAt(i))){
 		            	valido=false;    
 		            }
-		            	num += dniAComprobar.charAt(i);     
+		            num += dniAComprobar.charAt(i);     
 		       }
 		       ind = Integer.parseInt(num);
 		       ind %= 23;
@@ -533,6 +540,20 @@ public class concesionarioIvancamps {
 		}
         return valido;
    	} // fin comprobarDni
+	
+	public static boolean comprobarDniRepetido(String usuarios[][], String dni, boolean dniNoRepetido) {
+		for (int i=1; i<usuarios.length; i++) {
+			if (usuarios[i][0]!=null) {
+				if (usuarios[i][0].equals(dni)) {
+					dniNoRepetido=false;
+				}
+			}
+			else {
+				i=usuarios.length;
+			}
+		}
+		return dniNoRepetido;
+	}
 	
 	public static void realizarRegistroUsuarios(String usuarios[][], String dni, String nombre, String apellidoUno, String apellidoDos, String correo, String clave) {
 		for (int i=1; i<usuarios.length; i++) {
