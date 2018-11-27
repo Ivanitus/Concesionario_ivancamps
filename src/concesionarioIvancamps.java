@@ -169,7 +169,7 @@ public class concesionarioIvancamps {
 										confirmarCompra=sc.next();
 										confirmarCompra(coches, confirmarCompra, numCocheUsuario, contador, correo, modelo, contadorCadena, usuarios, cochesCompradosUsuarios);
 									}
-									else if(!cocheEncontrado){
+									else{
 										System.out.println("Coche no encontrado");
 									}
 									seguirUsuarioIniciado=true;
@@ -199,6 +199,7 @@ public class concesionarioIvancamps {
 									seguirUsuarioIniciado=true;
 									break;
 								case "6":
+									System.out.println("Sesion cerrada");
 									usuarioIniciado=false;
 									seguirUsuarioIniciado=false;
 									seguirUsuario=false;
@@ -212,6 +213,7 @@ public class concesionarioIvancamps {
 						}
 						else {
 							System.out.println("Usuario y/o contraseña incorrectos.");
+							seguirUsuario=true;
 						}
 						break;
 					case "2": //opcion para registrarse
@@ -233,7 +235,7 @@ public class concesionarioIvancamps {
 							clave=sc.next();
 							realizarRegistroUsuarios(usuarios, dni, nombre, apellidoUno, apellidoDos, correo, clave);
 						}
-						else if(!dniValido) {
+						else {
 							System.out.println("El DNI introducido NO es valido");
 						}
 						seguirUsuario=true;
@@ -241,9 +243,11 @@ public class concesionarioIvancamps {
 					case "3":
 						seguirUsuario=false;
 						break;
-					default:	
+					default:
+						System.out.println("Opcion erronea");
+						seguirUsuario=true;
 					}
-				}while(seguirUsuario);
+					}while(seguirUsuario);
 					break;
 				case "3": //opcion para salir de la vista de usuario y volver al menu principal
 					System.out.println("Gracias por usar el programa!");
