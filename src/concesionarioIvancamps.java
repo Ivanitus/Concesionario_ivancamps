@@ -1,6 +1,6 @@
 /**
  * @author Ivan Camps Sanchez
- * @version 1.0
+ * @version 1.0.1
  * @since 2018-26-11
  * Nombre de la clase: concesionarioIvancamps
  */
@@ -48,7 +48,7 @@ public class concesionarioIvancamps {
 			case "1": //opcion entrar como administrador
 					System.out.print("Introduce el nombre de usuario: ");
 					usuarioIntroducido=sc.next();
-					System.out.print("Introduce la contraseña: ");
+					System.out.print("Introduce la contraseÃ±a: ");
 					passwdIntroducido=sc.next();
 				if (adminCorrecto=comprobarDatosCorrectosAdmin(usuarioIntroducido, passwdIntroducido, ADMIN, PASSWD_ADMIN, adminCorrecto)) { //condicional y metodo para comprobar creedenciales del admin introducidas sean correctas
 					do {
@@ -136,7 +136,7 @@ public class concesionarioIvancamps {
 					}while(seguirAdmin);
 				}
 				else { //en caso de que las credenciales del administrador no coincidan
-					System.out.println("Nombre de usuario o contraseña incorrectos");
+					System.out.println("Nombre de usuario o contraseÃ±a incorrectos");
 					seguir=true;
 				}
 				break;
@@ -148,7 +148,7 @@ public class concesionarioIvancamps {
 					case "1": //opcion para iniciar sesion
 						System.out.print("Introduce tu e-mail: ");
 						correo=sc.next();
-						System.out.print("Introduce tu contraseña de acceso: ");
+						System.out.print("Introduce tu contraseÃ±a de acceso: ");
 						clave=sc.next();
 						usuarioCorrecto=comprobarUsuarioExiste(usuarios, correo, clave, usuarioCorrecto);
 						if (usuarioCorrecto) {
@@ -165,7 +165,7 @@ public class concesionarioIvancamps {
 									cocheEncontrado=comprobarCocheExiste(coches, numCocheUsuario, modelo, cocheEncontrado);
 									if (cocheEncontrado) {
 										precioConIVA=calcularPrecio(coches, numCocheUsuario, IVA);
-										System.out.print("¿Confirmar compra?: ");
+										System.out.print("Â¿Confirmar compra?: ");
 										confirmarCompra=sc.next();
 										confirmarCompra(coches, confirmarCompra, numCocheUsuario, contador, correo, modelo, contadorCadena, usuarios, cochesCompradosUsuarios);
 									}
@@ -212,7 +212,7 @@ public class concesionarioIvancamps {
 							}while(seguirUsuarioIniciado);
 						}
 						else {
-							System.out.println("Usuario y/o contraseña incorrectos.");
+							System.out.println("Usuario y/o contraseÃ±a incorrectos.");
 							seguirUsuario=true;
 						}
 						break;
@@ -234,7 +234,7 @@ public class concesionarioIvancamps {
 								apellidoDos=sc.next();
 								System.out.print("Introduce tu correo (nombredeusuario@nombrededominio.extension): ");
 								correo=sc.next();
-								System.out.print("Introduce tu contraseña: ");
+								System.out.print("Introduce tu contraseÃ±a: ");
 								clave=sc.next();
 								realizarRegistroUsuarios(usuarios, dni, nombre, apellidoUno, apellidoDos, correo, clave);
 							}
